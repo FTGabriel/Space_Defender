@@ -18,14 +18,7 @@ namespace SpaceDefender.Core
             // RAPPEL : Health ne peut pas etre negatif
         }
 
-        public void Heal(int amount) {
-            /* TODO : Health max = 100 */ 
-            Health -= amount;
-
-            if (Health < 0)
-                Health = 0;
-        }
-
+        public void Heal(int amount) { /* TODO : Health max = 100 */ }
         public void AddScore(int points) { /* TODO */ }
         public void LoseLife() { /* TODO */ }
     }

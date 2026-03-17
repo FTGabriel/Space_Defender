@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.TestTools;
 using SpaceDefender.Core;
 
-// Assets/Tests/EditMode/PlayerTests.cs
+// Assets/Tests/EditMode/ScoreCalculatorTests.cs
 
 [TestFixture]
 public class ScoreCalculatorTests
