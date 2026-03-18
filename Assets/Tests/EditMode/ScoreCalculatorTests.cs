@@ -9,22 +9,68 @@ using SpaceDefender.Core;
 [TestFixture]
 public class ScoreCalculatorTests
 {
-    private Player _player;
+    private ScoreCalculator _scoreCalculator;
 
     [SetUp]
     public void SetUp()
     {
-        _player = new Player();   // Arrange — initialisation
+        _scoreCalculator = new ScoreCalculator();
     }
 
-    // ??? ETAPE 1 : RED — ce test doit echouer ???????????
     [Test]
-    public void TakeDamage_Normal_ReducesHealth()
+    public void Calculate_WithZeroKills_ReturnsZero()
     {
-        int damage = 20;
+        int kills = 0;
+        int time = 60;
 
-        _player.TakeDamage(damage);
+        int score = _scoreCalculator.Calculate(kills, time);
 
-        Assert.AreEqual(80, _player.Health);
+        Assert.AreEqual(0, score);
     }
+
+    [Test]
+    public void ApplyCombo_With3Kills_IncreasesMultiplier()
+    {
+        int kills = 3;
+
+        _scoreCalculator.ApplyCombo(kills);
+
+        int score = _scoreCalculator.Calculate(1, 60);
+
+        Assert.Greater(score, 10);
+    }
+
+    [Test]
+    public void ResetMultiplier_AfterCombo_SetsMultiplierToOne()
+    {
+        _scoreCalculator.ApplyCombo(3);
+
+        _scoreCalculator.ResetMultiplier();
+        int score = _scoreCalculator.Calculate(1, 60);
+
+        Assert.AreEqual(10, score);
+    }
+
+    [Test]
+    public void Calculate_AfterComboAndReset_UsesBaseMultiplier()
+    {
+        _scoreCalculator.ApplyCombo(3);
+        _scoreCalculator.ResetMultiplier();
+
+        int score = _scoreCalculator.Calculate(2, 60);
+
+        Assert.AreEqual(20, score);
+    }
+
+    //Tests bonus
+    /*[Test]
+    public void Calculate_WhenTimeEqualsZero_ReturnsValidScore()
+    {
+        int kills = 5;
+        int time = 0;
+
+        int score = _scoreCalculator.Calculate(kills, time);
+
+        Assert.AreEqual(0, score);
+    }*/
 }

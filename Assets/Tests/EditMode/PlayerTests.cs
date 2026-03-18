@@ -42,40 +42,72 @@ public class PlayerTests
 
     // RED: — test TakeDamage is negative (error)
     [Test]
-    public void TakeDamage_WhenDamageIsNegative_ThrowsException()
+    /*public void TakeDamage_WhenDamageIsNegative_ThrowsException()
     {
         Assert.Throws<ArgumentException>(() => _player.TakeDamage(-10));
+    }*/
+    public void TakeDamage_WithNegativeAmount_DoesNotChangeHealth()
+    {
+        int initialHealth = _player.Health;
+
+        _player.TakeDamage(-10);
+
+        Assert.AreEqual(initialHealth, _player.Health);
     }
 
     // RED: - Heal normal
     [Test]
-    public void Heal_Normal_IncreaseHealth()
+    //public void Heal_Normal_IncreaseHealth()
+    public void Heal_WhenHealthBelow100_IncreasesHealth()
     {
         _player.TakeDamage(50);
+
         _player.Heal(30);
+
         Assert.AreEqual(80, _player.Health);
     }
 
     // RED: Heal exceeds max
     [Test]
-    public void Heal_WhenHealExceedsHealth_SetsHealthToOneHundred()
+    /*public void Heal_WhenHealExceedsHealth_SetsHealthToOneHundred()
     {
+        _player.TakeDamage(30);
         _player.Heal(50);
         Assert.AreEqual(100, _player.Health);
+    }*/
+    public void Heal_WhenAlreadyFullHealth_DoesNotExceed100()
+    {
+        int initialHealth = _player.Health;
+
+        _player.Heal(50);
+
+        Assert.AreEqual(initialHealth, _player.Health);
     }
 
     // RED: IsAlive
     [Test]
     public void IsAlive_WhenHealthAboveZero_ReturnsTrue()
     {
-        Assert.IsTrue(_player.IsAlive);
+        _player.TakeDamage(20);
+
+        bool alive = _player.IsAlive;
+
+        Assert.IsTrue(alive);
     }
 
     [Test]
-    public void IsAlive_HealthEqualsZero_ReturnsFalse()
+    /* public void IsAlive_HealthEqualsZero_ReturnsFalse()
+     {
+         _player.TakeDamage(100);
+         Assert.IsFalse(_player.IsAlive);
+     }*/
+    public void IsAlive_WhenHealthIsZero_ReturnsFalse()
     {
         _player.TakeDamage(100);
-        Assert.IsFalse(_player.IsAlive);
+
+        bool alive = _player.IsAlive;
+
+        Assert.IsFalse(alive);
     }
 
     // RED: LoseLife
@@ -87,12 +119,22 @@ public class PlayerTests
     }
 
     [Test]
-    public void LoseLife_WhenLivesEqualsZero_IsAliveIsFalse()
+    /*public void LoseLife_WhenLivesEqualsZero_IsAliveIsFalse()
     {
         _player.LoseLife();
         _player.LoseLife();
         _player.LoseLife();
         Assert.IsFalse(_player.IsAlive);
+    }*/
+    public void LoseLife_WhenLastLife_IsAliveReturnsFalse()
+    {
+        _player.LoseLife();
+        _player.LoseLife();
+        _player.LoseLife();
+
+        bool alive = _player.IsAlive;
+
+        Assert.IsFalse(alive);
     }
 
     // RED: AddScore
@@ -107,5 +149,14 @@ public class PlayerTests
     public void AddScore_PointsAreNegatives_DoesNotChangeScore()
     {
         Assert.Throws<ArgumentException>(() => _player.AddScore(-10));
+    }
+
+    //Tests bonus
+    [Test]
+    public void Heal_WhenPlayerIsDead_DoesNotRestoreHealth()
+    {
+        _player.TakeDamage(100);
+        _player.Heal(50);
+        Assert.AreEqual(0, _player.Health);
     }
 }

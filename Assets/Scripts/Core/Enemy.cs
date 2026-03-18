@@ -3,22 +3,35 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-public class Enemy
+namespace SpaceDefender.Core
 {
-    // A Test behaves as an ordinary method
-    [Test]
-    public void EnemySimplePasses()
+    public class Enemy
     {
-        // Use the Assert class to test conditions
-    }
+        public int Health { get; private set; } = 100;
+        public int PointValue { get; private set; } = 10;
 
-    // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
-    // `yield return null;` to skip a frame.
-    [UnityTest]
-    public IEnumerator EnemyWithEnumeratorPasses()
-    {
-        // Use the Assert class to test conditions.
-        // Use yield to skip a frame.
-        yield return null;
+        public bool IsAlive => Health > 0;
+
+        public void TakeDamage(int amount)
+        {
+            if (amount < 0)
+                throw new System.ArgumentException("Damage cannot be negative");
+
+            if (!IsAlive)
+                return;
+
+            Health -= amount;
+
+            if (Health < 0)
+                Health = 0;
+        }
+
+        public int GetReward()
+        {
+            if (!IsAlive)
+                return 0;
+
+            return PointValue;
+        }
     }
 }

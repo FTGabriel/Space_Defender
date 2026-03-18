@@ -14,12 +14,50 @@ namespace SpaceDefender.Core
 
         public void TakeDamage(int amount)
         {
-            // TODO : implementer la logique
-            // RAPPEL : Health ne peut pas etre negatif
+            if (amount < 0)
+                return;
+
+            if (!IsAlive)
+                return;
+
+            Health -= amount;
+
+            if (Health < 0)
+                Health = 0;
         }
 
-        public void Heal(int amount) { /* TODO : Health max = 100 */ }
-        public void AddScore(int points) { /* TODO */ }
-        public void LoseLife() { /* TODO */ }
+        public void Heal(int amount) {
+            if (amount < 0)
+                return;
+
+            if (!IsAlive)
+                return;
+
+            Health += amount;
+
+            if (Health > 100)
+                Health = 100;
+        }
+        public void AddScore(int points) {
+            if (points < 0)
+                throw new System.ArgumentException("Score cannot be negative");
+
+            Score += points;
+        }
+        public void LoseLife() {
+            if (Lives <= 0)
+                return;
+
+            Lives--;
+
+            if (Lives > 0)
+            {
+                Health = 100;
+            }
+            else
+            {
+                Health = 0;
+            }
+        }
     }
 }

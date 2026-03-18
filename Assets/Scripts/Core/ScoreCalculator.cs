@@ -3,22 +3,30 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-public class ScoreCalculator
+namespace SpaceDefender.Core
 {
-    // A Test behaves as an ordinary method
-    [Test]
-    public void ScoreCalculatorSimplePasses()
+    public class ScoreCalculator
     {
-        // Use the Assert class to test conditions
-    }
+        private int _baseScore = 10;
+        private float _multiplier = 1.0f;
 
-    // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
-    // `yield return null;` to skip a frame.
-    [UnityTest]
-    public IEnumerator ScoreCalculatorWithEnumeratorPasses()
-    {
-        // Use the Assert class to test conditions.
-        // Use yield to skip a frame.
-        yield return null;
+        public int Calculate(int kills, int time)
+        {
+            if (time == 0)
+                return 0;
+
+            return (int)(kills * _baseScore * _multiplier);
+        }
+
+        public void ApplyCombo(int combo)
+        {
+            if (combo > 1)
+                _multiplier += combo * 0.1f;
+        }
+
+        public void ResetMultiplier()
+        {
+            _multiplier = 1.0f;
+        }
     }
 }
