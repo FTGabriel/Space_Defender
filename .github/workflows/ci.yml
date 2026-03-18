@@ -52,8 +52,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: Library
-          key: Library-${{ hashFiles('Assets/**', 'Packages/**') }}
-          restore-keys: Library-
+          key: Library-${{ hashFiles('Assets/**') }}
 
       - name: Build WebGL
         uses: game-ci/unity-builder@v4
@@ -64,7 +63,6 @@ jobs:
         with:
           targetPlatform: WebGL
           buildName: SpaceDefender
-	    buildPath: build/WebGL
 
       - name: Upload Build
         uses: actions/upload-artifact@v4
