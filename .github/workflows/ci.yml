@@ -32,6 +32,7 @@ jobs:
           projectPath: .
           testMode: EditMode
           artifactsPath: test-results/
+          coverageOptions: generateAdditionalMetrics;generateHtmlReport
 
       - name: Upload Test Results
         uses: actions/upload-artifact@v4
@@ -39,6 +40,14 @@ jobs:
         with:
           name: test-results
           path: test-results/
+          
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: CodeCoverage/
+          retention-days: 14
 
   build:
     name: Build WebGL
@@ -70,4 +79,27 @@ jobs:
         with:
           name: build-webgl
           path: build/WebGL/
+          retention-days: 30
+
+  build-windows:
+    name: Build Windows
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Windows
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL:   ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: StandaloneWindows64
+          buildName: Space-Defender
+      - name: Upload Windows Build
+        uses: actions/upload-artifact@v4
+        with:
+          name: Space-Defender-Build
+          path: build/StandaloneWindows64/
           retention-days: 30
